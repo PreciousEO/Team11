@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Web-Entwicklung Team 14</title>
+    <title>Web-Entwicklung Team 11</title>
     <link rel="stylesheet" type="text/css" href="https://team11.wi1cm.uni-trier.de/public/Css/style.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
     <!-- Font-Awesome -->
@@ -30,9 +30,10 @@
         <img class="navbar_logo" src="https://team11.wi1cm.uni-trier.de/public/Logo/07_-_WE-Logo.svg" alt="Logo">
     </a>
 
-    <a class="navbar-items text-decoration-none ms-4" href="https://team11.wi1cm.uni-trier.de/public/">Tasks</a>
-    <a class="navbar-items text-decoration-none ms-3" href="https://team11.wi1cm.uni-trier.de/public/">Boards</a>
+    <a class="navbar-items text-decoration-none ms-4" href="https://team11.wi1cm.uni-trier.de/public/tasks">Tasks</a>
+    <a class="navbar-items text-decoration-none ms-3" href="https://team11.wi1cm.uni-trier.de/public/boards">Boards</a>
     <a class="navbar-items text-decoration-none ms-3" href="https://team11.wi1cm.uni-trier.de/public/spalten">Spalten</a>
+    <a class="navbar-items text-decoration-none ms-3" href="https://team11.wi1cm.uni-trier.de/public/personen">Personen</a>
 </nav>
 
 <!-- INHALT -->
