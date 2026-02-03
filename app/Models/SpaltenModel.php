@@ -12,7 +12,6 @@ class SpaltenModel extends Model
     protected $returnType = 'array';
     protected $useTimestamps = false;
 
-    // Passt zu deiner DB:
     // id, boardsid, sortid, spalte, spaltenbeschreibung
     protected $allowedFields = [
         'boardsid',

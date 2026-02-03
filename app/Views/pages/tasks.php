@@ -1,79 +1,104 @@
-<!DOCTYPE html>
-<html lang="de">
-<head>
-    <meta charset="UTF-8">
-    <title>Tasks Übersicht</title>
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Bootstrap Icons (für Stift & Papierkorb) -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-</head>
-<body>
-
 <main class="container mt-5 mb-5">
-    <div class="card w-100">
-        <div class="card-header d-flex justify-content-between align-items-center">
-            <span>Tasks</span>
-            <a href="/public/tasks/new" class="btn btn-primary btn-sm">Neu</a>
-        </div>
 
-        <div class="card-body">
-            <?php if (!empty($tasks)): ?>
-                <div class="table-responsive">
-                    <table class="table table-striped table-hover">
-                        <thead>
-                        <tr>
-                            <th>Task</th>
-                            <th>Erinnerungsdatum</th>
-                            <th>Aktionen</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <?php foreach ($tasks as $task): ?>
-                            <?php if (!empty($task['geloescht'])) continue; ?>
-                            <tr>
-                                <td><?= esc($task['tasks']) ?></td>
-                                <td>
-                                    <?php if (!empty($task['erinnerungsdatum'])): ?>
-                                        <?= date('d.m.Y', strtotime($task['erinnerungsdatum'])) ?>
-                                    <?php else: ?>
-                                        -
-                                    <?php endif; ?>
-                                </td>
-                                <td class="text-nowrap">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="mb-0">Tasks</h2>
 
-                                    <a class="btn btn-outline-primary btn-sm"
-                                       href="/public/tasks/edit/<?= esc($task['id']) ?>"
-                                       title="Bearbeiten">
-                                        <i class="bi bi-pencil"></i>
-                                    </a>
+        <div class="dropdown">
+            <?php
+            $activeName = 'Board wählen';
+            foreach (($boards ?? []) as $b) {
+                if ((int)$b['id'] === (int)($activeBoardId ?? 0)) {
+                    $activeName = $b['bezeichnung'];
+                    break;
+                }
+            }
+            ?>
+            <button class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown">
+                <?= esc($activeName) ?>
+            </button>
 
-                                    <form action="/public/tasks/delete/<?= esc($task['id']) ?>"
-                                          method="post"
-                                          style="display:inline"
-                                          onsubmit="return confirm('Task wirklich löschen?');">
-                                        <button class="btn btn-outline-danger btn-sm"
-                                                type="submit"
-                                                title="Löschen">
-                                            <i class="bi bi-trash"></i>
-                                        </button>
-                                    </form>
-
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                        </tbody>
-                    </table>
-                </div>
-            <?php else: ?>
-                <div class="alert alert-warning">
-                    Keine Tasks gefunden. Bitte Tasks in der Datenbank anlegen.
-                </div>
-            <?php endif; ?>
+            <ul class="dropdown-menu dropdown-menu-end">
+                <?php foreach (($boards ?? []) as $b): ?>
+                    <li>
+                        <a class="dropdown-item"
+                           href="/public/tasks?board=<?= esc($b['id']) ?>">
+                            <?= esc($b['bezeichnung']) ?>
+                        </a>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
         </div>
     </div>
-</main>
 
-</body>
-</html>
+    <div class="d-flex flex-nowrap gap-3 overflow-auto pb-3">
+
+        <?php foreach (($spalten ?? []) as $s): ?>
+            <div class="card" style="min-width: 340px;">
+                <div class="card-header">
+                    <div class="fw-bold"><?= esc($s['spalte']) ?></div>
+                    <small class="text-muted"><?= esc($s['spaltenbeschreibung'] ?? '') ?></small>
+                </div>
+
+                <div class="card-body d-flex flex-column gap-3">
+
+                    <?php if (empty($s['tasks'])): ?>
+                        <div class="text-muted">Keine Tasks.</div>
+                    <?php endif; ?>
+
+                    <?php foreach (($s['tasks'] ?? []) as $t): ?>
+                        <div class="card">
+                            <div class="card-body">
+
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <i class="bi bi-list-check"></i>
+                                        <span class="fw-semibold"><?= esc($t['name']) ?></span>
+                                    </div>
+
+                                    <div class="d-flex gap-2">
+                                        <a class="btn btn-sm btn-outline-primary"
+                                           href="/public/tasks/edit/<?= esc($t['id']) ?>">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+
+                                        <form method="post"
+                                              action="/public/tasks/delete/<?= esc($t['id']) ?>"
+                                              onsubmit="return confirm('Task wirklich löschen?');">
+                                            <button class="btn btn-sm btn-outline-danger" type="submit">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+
+                                <div class="mt-2 text-muted">
+                                    <i class="bi bi-calendar"></i>
+                                    <?= esc($t['erinnerungsdatum'] ?? '-') ?>
+
+                                    <?php if (!empty($t['erinnerung'])): ?>
+                                        <span class="ms-2 text-danger">
+                                            <i class="bi bi-bell-fill"></i>
+                                        </span>
+                                    <?php endif; ?>
+                                </div>
+
+                                <div class="mt-2">
+                                    <i class="bi bi-person-circle"></i>
+                                    <?= esc($t['person'] ?: '-') ?>
+                                </div>
+
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+
+                    <a class="btn btn-primary mt-2"
+                       href="/public/tasks/new?spaltenid=<?= esc($s['id']) ?>">
+                        <i class="bi bi-plus-lg"></i> Neu
+                    </a>
+
+                </div>
+            </div>
+        <?php endforeach; ?>
+
+    </div>
+</main>

@@ -6,6 +6,7 @@ use App\Models\SpaltenModel;
 
 class Spalten extends BaseController
 {
+
     public function index()
     {
         $spaltenModel = new SpaltenModel();
@@ -41,18 +42,35 @@ class Spalten extends BaseController
 
     public function create()
     {
-        $spaltenModel = new SpaltenModel();
+        $postData = $this->request->getPost();
 
-        $data = [
-            'boardsid' => (int) $this->request->getPost('boardsid'),
-            'sortid' => (int) $this->request->getPost('sortid'),
-            'spalte' => (string) ($this->request->getPost('spalte') ?? ''),
-            'spaltenbeschreibung' => (string) ($this->request->getPost('spaltenbeschreibung') ?? ''),
-        ];
+        if ($this->validation->run($postData, 'spaltebearbeiten')) {
+            $spaltenModel = new SpaltenModel();
 
-        $spaltenModel->insert($data);
+            $data = [
+                'boardsid' => (int) $postData['boardsid'],
+                'sortid' => (int) $postData['sortid'],
+                'spalte' => (string) ($postData['spalte'] ?? ''),
+                'spaltenbeschreibung' => (string) ($postData['spaltenbeschreibung'] ?? ''),
+            ];
 
-        return redirect()->to('/spalten');
+            $spaltenModel->insert($data);
+
+            return redirect()->to('/spalten');
+        } else {
+            $data = [
+                'spalte' => $postData,
+                'validation' => $this->validation,
+                'mode' => 'create',
+                'action' => '/public/spalten/create',
+                'error' => $this->validation->getErrors(),
+            ];
+
+            return view('startseite')
+                . view('menu')
+                . view('pages/spalte_form', $data)
+                . view('footer');
+        }
     }
 
     public function edit(int $id)
@@ -78,18 +96,35 @@ class Spalten extends BaseController
 
     public function update(int $id)
     {
-        $spaltenModel = new SpaltenModel();
+        $postData = $this->request->getPost();
 
-        $data = [
-            'boardsid' => (int) $this->request->getPost('boardsid'),
-            'sortid' => (int) $this->request->getPost('sortid'),
-            'spalte' => (string) ($this->request->getPost('spalte') ?? ''),
-            'spaltenbeschreibung' => (string) ($this->request->getPost('spaltenbeschreibung') ?? ''),
-        ];
+        if ($this->validation->run($postData, 'spaltebearbeiten')) {
+            $spaltenModel = new SpaltenModel();
 
-        $spaltenModel->update($id, $data);
+            $data = [
+                'boardsid' => (int) $postData['boardsid'],
+                'sortid' => (int) $postData['sortid'],
+                'spalte' => $postData['spalte'],
+                'spaltenbeschreibung' => $postData['spaltenbeschreibung'],
+            ];
 
-        return redirect()->to('/spalten');
+            $spaltenModel->update($id, $data);
+
+            return redirect()->to('/spalten');
+        } else {
+            $data = [
+                'spalte' => $postData,
+                'validation' => $this->validation,
+                'mode' => 'update',
+                'action' => "/public/spalten/update/$id",
+                'error' => $this->validation->getErrors(),
+            ];
+
+            return view('startseite')
+                . view('menu')
+                . view('pages/spalte_form', $data)
+                . view('footer');
+        }
     }
 
     public function delete(int $id)

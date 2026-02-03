@@ -22,5 +22,15 @@ $routes->post('spalten/create', 'Spalten::create');
 $routes->get('spalten/edit/(:num)', 'Spalten::edit/$1');
 $routes->post('spalten/update/(:num)', 'Spalten::update/$1');
 $routes->post('spalten/delete/(:num)', 'Spalten::delete/$1');
+$routes->get('boards', 'Boards::index');
+$routes->get('boards/new', 'Boards::new');
+$routes->post('boards/create', 'Boards::create');
+$routes->get('boards/edit/(:num)', 'Boards::edit/$1');
+$routes->post('boards/update/(:num)', 'Boards::update/$1');
+$routes->post('boards/delete/(:num)', 'Boards::delete/$1');
+
+
+
+
 
 
