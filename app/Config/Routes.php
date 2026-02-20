@@ -28,7 +28,7 @@ $routes->post('boards/create', 'Boards::create');
 $routes->get('boards/edit/(:num)', 'Boards::edit/$1');
 $routes->post('boards/update/(:num)', 'Boards::update/$1');
 $routes->post('boards/delete/(:num)', 'Boards::delete/$1');
-
+$routes->post('tasks/updateSort', 'Tasks::updateSort');
 
 
 

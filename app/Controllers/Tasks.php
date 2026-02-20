@@ -202,6 +202,34 @@ class Tasks extends BaseController
 
         return redirect()->to('/tasks');
     }
+    //8.2
+    public function updateSort()
+    {
+        // JSON-Daten aus dem AJAX-Request lesen
+        $json = $this->request->getJSON();
+
+        // Prüfen, ob alle benötigten Daten vorhanden sind
+        if ($json && isset($json->id) && isset($json->spaltenid) && isset($json->sortid)) {
+            $taskModel = new TaskModel();
+
+            $id = (int) $json->id;
+
+            // Die neuen Werte für Spalte und Position vorbereiten
+            $dataUpdate = [
+                'spaltenid' => (int) $json->spaltenid,
+                'sortid'    => (int) $json->sortid
+            ];
+
+            // In der Datenbank aktualisieren
+            $taskModel->update($id, $dataUpdate);
+
+            // Dem Browser (JavaScript) eine Erfolgsmeldung zurücksenden
+            return $this->response->setJSON(['success' => true]);
+        }
+
+        // Falls Fehler auftreten oder Daten fehlen
+        return $this->response->setJSON(['success' => false, 'message' => 'Ungültige Daten empfangen']);
+    }
 }
 
 
