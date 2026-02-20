@@ -135,7 +135,7 @@
                 }
             });
 
-            // Test-Ausgabe in der Konsole - Drücke F12 im Browser, um das zu prüfen!
+            // Test-Ausgabe in der Konsole
             console.log("Erfolg! Task " + taskId + " verschoben nach Spalte " + newSpaltenId + " auf Position " + newSortId);
 
             // Übung8.2-Ajax
